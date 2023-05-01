@@ -27,18 +27,39 @@ public class DataBaseManager {
     }
     public void createTables(){
         try {
-            if(exists(Path.of("Reviews.sqlite3"))){
-
-
-            }
-            else{
-                String StopsTable = """
-                       CREATE TABLE STOPS(ID INTEGER NOT NULL , NAME VARCHAR(255) NOT NULL,
-                       LATITUDE DOUBLE NOT NULL ,LONGITUDE DOUBLE NOT NULL , PRIMARY KEY (ID))""";
-                Statement statement = connection.createStatement();
-                statement.execute(StopsTable);
-                statement.close();
-            }
+            String studentsTable = """
+                       CREATE TABLE IF NOT EXISTS Students(
+                                                id INT AUTO_INCREMENT PRIMARY KEY,
+                                                login_name VARCHAR(255) UNIQUE NOT NULL,
+                                                password VARCHAR(255) NOT NULL
+                       )""";
+            Statement statement = connection.createStatement();
+            statement.execute(studentsTable);
+            statement.close();
+            String coursesTable = """
+                   CREATE TABLE IF NOT EXISTS Courses(
+                                           id INT AUTO_INCREMENT PRIMARY KEY,
+                                           department VARCHAR(255) NOT NULL,
+                                           catalog_number VARCHAR(255) NOT NULL
+                   )
+                   """;
+            Statement statement2 = connection.createStatement();
+            statement2.execute(coursesTable);
+            statement2.close();
+            String reviewsTable = """
+                   CREATE TABLE IF NOT EXISTS Reviews (
+                                           id INT AUTO_INCREMENT PRIMARY KEY,
+                                           student_id INT NOT NULL,
+                                           course_id INT NOT NULL,
+                                           review_text TEXT NOT NULL,
+                                           rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+                                           FOREIGN KEY (student_id) REFERENCES Students(id),
+                                           FOREIGN KEY (course_id) REFERENCES Courses(id)
+                   )
+                   """;
+            Statement statement3 = connection.createStatement();
+            statement3.execute(reviewsTable);
+            statement3.close();
         }
         catch (SQLException e){
             throw new RuntimeException(e);
