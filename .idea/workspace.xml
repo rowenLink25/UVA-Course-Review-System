@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="81e4d154-6b14-4aae-8440-028578a4464d" name="Changes" comment="Course class">
-      <change afterPath="$PROJECT_DIR$/src/main/java/edu/virginia/cs/hw7/Student.java" afterDir="false" />
+    <list default="true" id="81e4d154-6b14-4aae-8440-028578a4464d" name="Changes" comment="Student class">
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/virginia/cs/hw7/Review.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -103,7 +103,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682971280994</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Student class">
+      <created>1682971832888</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1682971832888</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -124,6 +131,7 @@
     <MESSAGE value="test" />
     <MESSAGE value="createTables work" />
     <MESSAGE value="Course class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Course class" />
+    <MESSAGE value="Student class" />
+    <option name="LAST_COMMIT_MESSAGE" value="Student class" />
   </component>
 </project>
