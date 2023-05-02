@@ -10,9 +10,8 @@
 
         <property name="hibernate.hbm2ddl.auto" >update</property>
 
-<!--        <mapping class="edu.virginia.cs.State" />-->
-<!--        <mapping class="edu.virginia.cs.Client" />-->
-<!--        <mapping class="edu.virginia.cs.Account" />-->
-<!--        <mapping class="edu.virginia.cs.Transaction" />-->
+        <mapping class="edu.virginia.cs.hw7.Student" />
+        <mapping class="edu.virginia.cs.hw7.Course" />
+        <mapping class="edu.virginia.cs.hw7.Review" />
     </session-factory>
 </hibernate-configuration>
