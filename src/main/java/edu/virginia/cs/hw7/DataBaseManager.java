@@ -1,10 +1,7 @@
 package edu.virginia.cs.hw7;
 
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import static java.nio.file.Files.exists;
 
@@ -77,6 +74,7 @@ public class DataBaseManager {
     }
 
     public void fillStartereData(){
+        //insert courses
         SQLoperator("INSERT INTO Courses(id, department, catalog_number) VALUES (1, 'CS', 2130)");
         SQLoperator("INSERT INTO Courses(id, department, catalog_number) VALUES (2, 'APMA', 1234)");
         SQLoperator("INSERT INTO Courses(id, department, catalog_number) VALUES (3, 'ENWR', 5693)");
@@ -100,6 +98,39 @@ public class DataBaseManager {
         SQLoperator("DELETE FROM Courses");
         SQLoperator("DELETE FROM Students");
         SQLoperator("DELETE FROM Reviews");
+    }
+    public Boolean checkIfStudentExists(String username, String password){
+        try{
+            String checker = String.format("""
+                SELECT COUNT(1) FROM Students WHERE login_name = "%s" AND password = "%s"
+                """, username, password);
+            Statement check = connection.createStatement();
+            ResultSet rs = check.executeQuery(checker);
+            if(rs.getBoolean(1)){
+                check.close();
+                return true;
+            }
+            else{
+                check.close();
+                return false;
+            }
+
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+    public void addNewStudentAccount(String username, String password){
+        try{
+            String newAccount = String.format("""
+                INSERT INTO STUDENTS (login_name, password)
+                values("%s", "%s")""" , username, password);
+            Statement insert = connection.createStatement();
+            insert.execute(newAccount);
+            insert.close();
+
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
 }

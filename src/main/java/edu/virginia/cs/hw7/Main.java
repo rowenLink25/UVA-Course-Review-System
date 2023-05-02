@@ -9,8 +9,8 @@ public class Main {
         manager.createTables();
         manager.clearTables();
         manager.fillStartereData();
-//        UserInterface UI = new UserInterface(manager);
-//        UI.login_screen();
+        UserInterface UI = new UserInterface(manager);
+        UI.login_screen();
     }
 
 
