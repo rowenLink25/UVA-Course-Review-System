@@ -9,6 +9,8 @@ public class UserInterface {
         manager = theManager;
     }
 
+    public String user = "";
+
     public void login_screen(){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Type the number of your desired option and press enter");
@@ -32,6 +34,7 @@ public class UserInterface {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter your username");
         String username = scanner.nextLine();
+        user = username;
         System.out.println("Please enter your password");
         String password = scanner.nextLine();
         //Need to make database interaction
@@ -51,6 +54,7 @@ public class UserInterface {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter your desired username");
         String username = scanner.nextLine();
+        user = username;
         System.out.println("Please enter your desired password");
         String password = scanner.nextLine();
         System.out.println("Please re-enter your desired password");
@@ -73,7 +77,7 @@ public class UserInterface {
         System.out.println("3 : Log-out");
         String choice = scanner.nextLine();
         if(choice.equals("1")){
-            // need to add code to submit a review
+            submitReview();
         }
         if(choice.equals("2")){
             // need to add code to see reviews
@@ -81,6 +85,87 @@ public class UserInterface {
         if(choice.equals("3")){
             login_screen();
         }
+        else {
+            System.out.println("Please select a valid option.");
+            mainMenu();
+        }
 
+    }
+
+    public void submitReview(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the course name (e.g., CS 3140): ");
+        String courseName = scanner.nextLine();
+
+        String[] breakDown = courseName.split(" ");
+        String subject = breakDown[0];
+        String catNum = breakDown[1];
+
+        if(!validCourseName(courseName)){
+            System.out.println("Invalid course name. Please enter a valid course name in the format 'Subject CatalogNumber'.");
+            mainMenu();
+        }
+
+        if(!manager.checkCourseExists(subject, catNum)){
+            manager.addCourse(subject,catNum);
+        }
+
+        if(manager.checkIfStudentReviewedCourse(manager.getStudentID(user), manager.getCourseID(subject, catNum))) {
+            System.out.println("You have already reviewed this course, please choose a different course.");
+            mainMenu();
+        }
+
+        System.out.print("Enter your review message: ");
+        String message = scanner.nextLine();
+
+        System.out.print("Rate your experience in the class between 1 and 5: ");
+        int rating = validRating();
+
+        manager.addReview(user, manager.getCourseID(subject, catNum), message, rating);
+
+        System.out.println("Review submitted successfully!");
+        mainMenu();
+    }
+
+    public boolean validCourseName(String courseName){
+        String[] breakDown = courseName.split(" ");
+        if(breakDown.length != 2){
+            return false;
+        }
+        String subject = breakDown[0];
+        String catNum = breakDown[1];
+        if(subject.length() >4){
+            return false;
+        }
+        for(char c : subject.toCharArray()){
+            if(!Character.isLetter(c)){
+                return false;
+            }
+            if (Character.isLowerCase(c)) {
+                return false;
+            }
+        }
+        if(catNum.length()!=4){
+            return false;
+        }
+        for(char c : catNum.toCharArray()){
+            if(!Character.isDigit(c)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int validRating(){
+        Scanner scanner = new Scanner(System.in);
+
+        int rate = Integer.parseInt(scanner.nextLine());
+        if(rate>=1 && rate<=5){
+            return rate;
+        }
+        else {
+            System.out.println("Invalid rating. Please enter a number between 1 and 5.");
+            return validRating();
+        }
     }
 }

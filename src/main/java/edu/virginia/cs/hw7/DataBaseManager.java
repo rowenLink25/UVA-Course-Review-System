@@ -133,4 +133,130 @@ public class DataBaseManager {
         }
     }
 
+    public int getStudentID(String username) {
+        try {
+            String query = String.format("""
+            SELECT id FROM Students
+            WHERE login_name = '%s'
+            """, username);
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            if (resultSet.next()) {
+                int studentID = resultSet.getInt("id");
+                statement.close();
+                return studentID;
+            } else {
+                statement.close();
+                throw new IllegalArgumentException("Student not found.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean checkCourseExists(String department, String catalogNumber) {
+        try {
+            String query = String.format("""
+            SELECT COUNT(*) FROM Courses
+            WHERE department = '%s' AND catalog_number = '%s'
+            """, department, catalogNumber);
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            int count = resultSet.getInt(1);
+            statement.close();
+            return count > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void addCourse(String department, String catalogNumber) {
+        try {
+            String query = String.format("""
+            INSERT INTO Courses (department, catalog_number)
+            VALUES ('%s', '%s')
+            """, department, catalogNumber);
+
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getCourseID(String department, String catalogNumber) {
+        try {
+            String query = String.format("""
+            SELECT id FROM Courses
+            WHERE department = '%s' AND catalog_number = '%s'
+            """, department, catalogNumber);
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            if (resultSet.next()) {
+                int courseID = resultSet.getInt("id");
+                statement.close();
+                return courseID;
+            } else {
+                statement.close();
+                throw new IllegalArgumentException("Course not found.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void addReview(String username, int courseID, String reviewText, int rating) {
+        try {
+            String studentCheck = String.format("""
+            SELECT id FROM Students WHERE login_name = '%s'
+            """, username);
+            Statement studentStatement = connection.createStatement();
+            ResultSet studentResult = studentStatement.executeQuery(studentCheck);
+
+            if (!studentResult.next()) {
+                throw new IllegalArgumentException("Student does not exist.");
+            }
+
+            int studentID = studentResult.getInt("id");
+
+            String reviewInsert = String.format("""
+            INSERT INTO Reviews (student_id, course_id, review_text, rating)
+            VALUES (%d, %d, '%s', %d)
+            """, studentID, courseID, reviewText, rating);
+
+            Statement reviewStatement = connection.createStatement();
+            reviewStatement.executeUpdate(reviewInsert);
+
+            reviewStatement.close();
+            studentStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean checkIfStudentReviewedCourse(int studentID, int courseID) {
+        try {
+            String query = String.format("""
+            SELECT COUNT(*) FROM Reviews
+            WHERE student_id = %d AND course_id = %d
+            """, studentID, courseID);
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            int count = resultSet.getInt(1);
+            statement.close();
+            return count > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
