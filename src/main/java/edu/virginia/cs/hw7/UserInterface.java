@@ -81,6 +81,7 @@ public class UserInterface {
         }
         if(choice.equals("2")){
             // need to add code to see reviews
+            seeReviews();
         }
         if(choice.equals("3")){
             login_screen();
@@ -167,5 +168,36 @@ public class UserInterface {
             System.out.println("Invalid rating. Please enter a number between 1 and 5.");
             return validRating();
         }
+    }
+
+    public void seeReviews() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the course name (e.g., CS 3140): ");
+        String courseName = scanner.nextLine();
+
+        String[] breakDown = courseName.split(" ");
+        String subject = breakDown[0];
+        String catNum = breakDown[1];
+
+        if(!validCourseName(courseName)){
+            System.out.println("Invalid course name. Please enter a valid course name in the format 'Subject CatalogNumber'.");
+            mainMenu();
+        }
+
+        if(!manager.checkCourseHasReviews(manager.getCourseID(subject, catNum))) {
+            System.out.println("This course has no reviews yet. Please pick a different course.");
+            mainMenu();
+        }
+
+        String[] reviewMessages = manager.getReviewMessagesForCourse(manager.getCourseID(subject, catNum));
+        System.out.println("Review Messages for "+ courseName+":");
+        for (String message : reviewMessages) {
+            System.out.println(message);
+        }
+
+        double averageRate = manager.calculateAverageRatingForCourse(manager.getCourseID(subject, catNum));
+        System.out.println("Average rating for "+ courseName+": "+averageRate+"/5");
+
+        mainMenu();
     }
 }

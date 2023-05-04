@@ -2,6 +2,8 @@ package edu.virginia.cs.hw7;
 
 import java.nio.file.Path;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.nio.file.Files.exists;
 
@@ -236,6 +238,77 @@ public class DataBaseManager {
 
             reviewStatement.close();
             studentStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean checkCourseHasReviews(int courseID) {
+        try {
+            String query = String.format("""
+            SELECT COUNT(*) FROM Reviews
+            WHERE course_id = %d
+            """, courseID);
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            int count = resultSet.getInt(1);
+            statement.close();
+            return count > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String[] getReviewMessagesForCourse(int courseID) {
+        try {
+            String query = String.format("""
+            SELECT review_text FROM Reviews
+            WHERE course_id = %d
+            """, courseID);
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            List<String> reviewMessages = new ArrayList<>();
+            while (resultSet.next()) {
+                String reviewText = resultSet.getString("review_text");
+                reviewMessages.add(reviewText);
+            }
+
+            statement.close();
+            return reviewMessages.toArray(new String[0]);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public double calculateAverageRatingForCourse(int courseID) {
+        try {
+            String query = String.format("""
+            SELECT rating FROM Reviews
+            WHERE course_id = %d
+            """, courseID);
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            int ratingSum = 0;
+            int count = 0;
+            while (resultSet.next()) {
+                int rating = resultSet.getInt("rating");
+                ratingSum += rating;
+                count++;
+            }
+
+            statement.close();
+
+            if (count > 0) {
+                return (double) ratingSum / count;
+            } else {
+                throw new IllegalArgumentException("Course not found or no ratings available.");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
