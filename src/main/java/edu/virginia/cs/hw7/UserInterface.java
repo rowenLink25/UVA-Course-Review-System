@@ -38,8 +38,6 @@ public class UserInterface {
         System.out.println("Please enter your password");
         String password = scanner.nextLine();
         //Need to make database interaction
-        System.out.println(username);
-        System.out.println(password);
         Boolean result = manager.checkIfStudentExists(username, password);
         if(result == true){
             mainMenu();

@@ -62,8 +62,8 @@ public class DataBaseManager {
                                            course_id INT NOT NULL,
                                            review_text TEXT NOT NULL,
                                            rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
-                                           FOREIGN KEY (student_id) REFERENCES Students(id),
-                                           FOREIGN KEY (course_id) REFERENCES Courses(id)
+                                           FOREIGN KEY (student_id) REFERENCES Students(id) ON DELETE CASCADE,
+                                           FOREIGN KEY (course_id) REFERENCES Courses(id) ON DELETE CASCADE
                    )
                    """;
             Statement statement3 = connection.createStatement();
