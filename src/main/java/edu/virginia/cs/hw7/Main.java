@@ -6,9 +6,9 @@ public class Main {
         ConfigSingleton instance = ConfigSingleton.getInstance();
         manager = new DataBaseManager();
         manager.connect(instance);
-        manager.createTables();
-        manager.clearTables();
-        manager.fillStartereData();
+//        manager.createTables();
+//        manager.clearTables();
+//        manager.fillStartereData();
         UserInterface UI = new UserInterface(manager);
         UI.login_screen();
     }
